@@ -7,6 +7,11 @@ std::vector <core_function_t> builtins::functions = {
     { "extend-down",  builtins::extend_down  },
     { "extend-up",    builtins::extend_up    },
 
+    { "shrink-down",  builtins::shrink_down  },
+    { "shrink-up",    builtins::shrink_up    },
+    { "shrink-left" , builtins::shrink_left  },
+    { "shrink-right", builtins::shrink_right },
+
     { "exit-program", builtins::exit_program },
 };
 
@@ -56,6 +61,33 @@ int builtins::extend_down(Display* dpy, XEvent* event){
     XResizeWindow(dpy, event->xkey.subwindow,
         wm::attr.width,
         wm::attr.height + config::_global_extend_amount);
+    return 0;
+}
+
+int builtins::shrink_down(Display* dpy, XEvent* event){
+    config::_global_extend_amount *= -1;
+    builtins::extend_up(dpy, event);
+    config::_global_extend_amount *= -1;
+    return 0;
+}
+
+int builtins::shrink_up(Display* dpy, XEvent* event){
+    config::_global_extend_amount *= -1;
+    builtins::extend_down(dpy, event);
+    config::_global_extend_amount *= -1;
+    return 0;
+}
+int builtins::shrink_left(Display* dpy, XEvent* event){
+    config::_global_extend_amount *= -1;
+    builtins::extend_right(dpy, event);
+    config::_global_extend_amount *= -1;
+    return 0;
+}
+
+int builtins::shrink_right(Display* dpy, XEvent* event){
+    config::_global_extend_amount *= -1;
+    builtins::extend_left(dpy, event);
+    config::_global_extend_amount *= -1;
     return 0;
 }
 

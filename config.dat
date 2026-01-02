@@ -18,3 +18,8 @@ key-bind: META+Right = extend-right
 key-bind: META+Left = extend-left
 key-bind: META+Down = extend-down
 key-bind: META+Up = extend-up
+
+key-bind: META-CTRL+Down = shrink-down
+key-bind: META-CTRL+Up = shrink-up
+key-bind: META-CTRL+Left = shrink-left
+key-bind: META-CTRL+Right = shrink-right

@@ -56,10 +56,11 @@ int keyboard::handle(Display* dpy, XEvent* event) {
 
     for (int i = 0; i < config::_key_bind_table.size(); i++){
         /**
-         *  If the keys don't match then skip to the next
+         *  If the keys or modifiers don't match then skip to the next
          *  config entry.
          */
-        if (strcmp(config::_key_bind_table[i]._key.c_str(), key_str) != 0)
+        if (strcmp(config::_key_bind_table[i]._key.c_str(), key_str) != 0 ||
+            config::_key_bind_table[i]._mod != event->xkey.state)
             continue;
 
         /**

@@ -19,6 +19,12 @@ namespace builtins {
     int extend_left(Display*, XEvent*);
     int extend_up(Display*, XEvent*);
     int extend_down(Display*, XEvent*);
+
+    int shrink_down(Display*, XEvent*);
+    int shrink_up(Display*, XEvent*);
+    int shrink_left(Display*, XEvent*);
+    int shrink_right(Display*, XEvent*);
+
     int exit_program(Display*, XEvent*);
 }
 

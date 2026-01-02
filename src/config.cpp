@@ -97,7 +97,10 @@ int config::init(char* filepath){
             _key_bind_t _new_bind;
             _new_bind._key = keyc_split[1];
             _new_bind._command = bind_split[1];
-            _new_bind._mod = _key_mod_bind[to_lower(keyc_split[0])];
+
+            std::vector <std::string> mod_split = split_str(keyc_split[0], '-');
+            for (int i = 0; i < mod_split.size(); i++)
+                _new_bind._mod |= _key_mod_bind[to_lower(mod_split[i])];
             
             if (line_split[0] == "key-bind-exec") _new_bind._type = _KEY_BIND_TYPE_EXEC;
             if (line_split[0] == "key-bind") _new_bind._type = _KEY_BIND_TYPE_FUNC;
