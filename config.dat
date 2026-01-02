@@ -1,0 +1,20 @@
+[ Startup Commands]
+startup: feh --bg-scale ./background.png
+
+[ Theme preferences ]
+infocus-border: 2 #ffffffff
+unfocus-border: 1 #00000000
+
+[ Default Apps ]
+key-bind-exec: META+t = /usr/bin/xterm
+key-bind-exec: META+b = /usr/bin/firefox
+key-bind-exec: META+f = /usr/bin/dolphin
+
+[ Internal Functions ]
+extend-amount: 20
+
+key-bind: META+x = exit-program
+key-bind: META+Right = extend-right
+key-bind: META+Left = extend-left
+key-bind: META+Down = extend-down
+key-bind: META+Up = extend-up

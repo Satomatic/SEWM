@@ -1,0 +1,106 @@
+#include <X11/Xlib.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <keyboard.h>
+#include <mouse.h>
+#include <global.h>
+#include <error.h>
+#include <args.h>
+
+int error_handle (Display* dpy, XErrorEvent* ev){
+    return 0;
+}
+
+int error_fatal_handle(Display* dpy){
+    return 0;
+}
+
+Display* wm::dpy;
+Window wm::root;
+XWindowAttributes wm::attr;
+XButtonEvent wm::start;
+Window wm::fwindow;
+
+std::vector <Window> wm::windows = {};
+
+/**
+ *  Change the input focus and update the borders to
+ *  a new window.
+ *
+ *  @param Window Window to focus
+ */
+void wm::update_focus_border(Window win){
+    XSetWindowAttributes attr;
+    attr.border_pixel = 0x00000000;
+    XChangeWindowAttributes(wm::dpy, wm::fwindow, CWBorderPixel, &attr);
+ 
+    wm::fwindow = win;
+    XSetInputFocus(wm::dpy, wm::fwindow, RevertToParent, CurrentTime);
+
+    attr.border_pixel = 0xffffffff;
+    XChangeWindowAttributes(wm::dpy, wm::fwindow, CWBorderPixel, &attr);
+}
+
+int main(int argc, char** argv)
+{
+    wm::process_args(argc, argv);
+
+    XEvent ev;
+
+    if(!(wm::dpy = XOpenDisplay(0x0))) return 1;
+    wm::root = DefaultRootWindow(wm::dpy);
+    XSetInputFocus(wm::dpy, wm::root, RevertToParent, CurrentTime);
+    wm::fwindow = wm::root;
+
+    /**
+     *  We only really set the error handlers to stop the default one
+     *  from exiting every time something minor happens.
+     */
+    XSetErrorHandler(error_handle);
+    XSetIOErrorHandler(error_fatal_handle);
+
+    /**
+     *  Intialize the keyboard and mouse inputs
+     */
+    keyboard::init(wm::dpy);
+    mouse::init(wm::dpy);
+
+    XSelectInput(wm::dpy, wm::root, SubstructureNotifyMask);
+
+    wm::start.subwindow = None;
+    for(;;){
+        XNextEvent(wm::dpy, &ev);
+
+        switch (ev.type) {
+            case KeyPress:
+                keyboard::handle(wm::dpy, &ev);
+                break;
+
+            case KeyRelease:
+                break;
+
+            case ButtonPress:
+                mouse::handle_press(wm::dpy, &ev);
+                break;
+
+            case MotionNotify:
+                mouse::handle_motion(wm::dpy, &ev);
+                break;
+
+            case ButtonRelease:
+                mouse::handle_release(wm::dpy, &ev);
+                break;
+
+            case CreateNotify:
+                wm::update_focus_border(ev.xcreatewindow.window);
+                wm::windows.push_back(ev.xcreatewindow.window);
+                break;
+
+            default:
+                error::unhandled(&ev);
+                break;
+        }
+    }
+}
