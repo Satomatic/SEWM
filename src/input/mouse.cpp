@@ -62,15 +62,15 @@ int mouse::handle_press(Display* dpy, XEvent* event) {
  *  @return (int) 0 == done :: -1 == unhandled
  */
 int mouse::handle_motion(Display* dpy, XEvent* event) {
-    if (event->xbutton.subwindow == None)
-        return -1;
+    //if (event->xbutton.subwindow == None)
+    //    return -1;
     
     if ((event->xbutton.state & Mod4Mask) == 0)
         return -1;
 
     int xdiff = event->xbutton.x_root - wm::start.x_root;
     int ydiff = event->xbutton.y_root - wm::start.y_root;
-    XMoveResizeWindow(dpy, wm::start.subwindow,
+    XMoveResizeWindow(dpy, wm::fwindow,
                       wm::attr.x + (wm::start.button==1 ? xdiff : 0),
                       wm::attr.y + (wm::start.button==1 ? ydiff : 0),
                       MAX(1, wm::attr.width + (wm::start.button==3 ? xdiff : 0)),
