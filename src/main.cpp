@@ -23,7 +23,10 @@ XWindowAttributes wm::attr;
 XButtonEvent wm::start;
 Window wm::fwindow;
 
-std::vector <Window> wm::windows = {};
+int wm::display_width = 0;
+int wm::display_height = 0;
+
+std::vector <wm_window_t> wm::windows = {};
 
 /**
  *  Change the input focus and update the borders to
@@ -54,6 +57,9 @@ int main(int argc, char** argv)
     XSetInputFocus(wm::dpy, wm::root, RevertToParent, CurrentTime);
     wm::fwindow = wm::root;
 
+    wm::display_width = DisplayWidth(wm::dpy, DefaultScreen(wm::dpy));
+    wm::display_height = DisplayHeight(wm::dpy, DefaultScreen(wm::dpy));
+    
     /**
      *  We only really set the error handlers to stop the default one
      *  from exiting every time something minor happens.
@@ -95,7 +101,22 @@ int main(int argc, char** argv)
 
             case CreateNotify:
                 wm::update_focus_border(ev.xcreatewindow.window);
-                wm::windows.push_back(ev.xcreatewindow.window);
+                
+                XGetWindowAttributes(
+                    wm::dpy,
+                    ev.xcreatewindow.window,
+                    &wm::attr
+                );
+
+                wm::windows.push_back({
+                    ev.xcreatewindow.window,
+                    false,
+                    wm::attr.width,
+                    wm::attr.height,
+                    wm::attr.x,
+                    wm::attr.y
+                });
+
                 break;
 
             default:

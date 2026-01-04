@@ -6,6 +6,17 @@
 #include <vector>
 #include <string>
 
+typedef struct {
+    Window _window;
+
+    bool _fill;
+
+    int _saved_width;
+    int _saved_height;
+    int _saved_x;
+    int _saved_y;
+} wm_window_t;
+
 namespace wm {
     extern Display* dpy;
     extern Window root;
@@ -13,9 +24,12 @@ namespace wm {
     extern XButtonEvent start;
     extern Window fwindow;
 
+    extern int display_width;
+    extern int display_height;
+
     void update_focus_border(Window);
 
-    extern std::vector <Window> windows;
+    extern std::vector <wm_window_t> windows;
 }
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))

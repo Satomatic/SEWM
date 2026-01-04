@@ -25,6 +25,11 @@ namespace builtins {
     int shrink_left(Display*, XEvent*);
     int shrink_right(Display*, XEvent*);
 
+    int fill_right_half(Display*, XEvent*);
+    int fill_left_half(Display*, XEvent*);
+    int fill_fullscreen(Display*, XEvent*);
+    int fill_revert(Display*, XEvent*);
+
     int exit_program(Display*, XEvent*);
 }
 

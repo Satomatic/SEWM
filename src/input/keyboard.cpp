@@ -18,9 +18,6 @@
  *  @return int (0 == success :: -1 == fail)
  */
 int keyboard::init(Display* dpy) {
-
-    std::cout << XStringToKeysym("right") << std::endl;
-
     /**
      *  Bind keys loaded from the configuration file.
      */

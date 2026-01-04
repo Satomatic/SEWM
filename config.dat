@@ -23,3 +23,8 @@ key-bind: META-CTRL+Down = shrink-down
 key-bind: META-CTRL+Up = shrink-up
 key-bind: META-CTRL+Left = shrink-left
 key-bind: META-CTRL+Right = shrink-right
+
+key-bind: META-ALT+Right = fill-right-half
+key-bind: META-ALT+Left = fill-left-half
+key-bind: META-ALT+Up = fill-fullscreen
+key-bind: META-ALT+Down = fill-revert

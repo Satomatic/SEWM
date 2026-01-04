@@ -97,6 +97,7 @@ int config::init(char* filepath){
             _key_bind_t _new_bind;
             _new_bind._key = keyc_split[1];
             _new_bind._command = bind_split[1];
+            _new_bind._mod = 0;
 
             std::vector <std::string> mod_split = split_str(keyc_split[0], '-');
             for (int i = 0; i < mod_split.size(); i++)
