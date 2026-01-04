@@ -130,9 +130,9 @@ void save_window_state(Display* dpy, Window window){
 #define PADDING 10
 
 int builtins::fill_right_half(Display* dpy, XEvent* event){
-    save_window_state(dpy, event->xkey.subwindow);
+    save_window_state(dpy, wm::fwindow);
 
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XMoveResizeWindow(dpy, wm::fwindow,
         wm::display_width / 2 + PADDING,
         PADDING,
         wm::display_width / 2 - (PADDING * 2),
@@ -143,9 +143,9 @@ int builtins::fill_right_half(Display* dpy, XEvent* event){
 }
 
 int builtins::fill_left_half(Display* dpy, XEvent* event){
-    save_window_state(dpy, event->xkey.subwindow);
+    save_window_state(dpy, wm::fwindow);
 
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XMoveResizeWindow(dpy, wm::fwindow,
         PADDING,
         PADDING,
         wm::display_width / 2 - (PADDING * 2),
@@ -156,9 +156,9 @@ int builtins::fill_left_half(Display* dpy, XEvent* event){
 }
 
 int builtins::fill_fullscreen(Display* dpy, XEvent* event){
-    save_window_state(dpy, event->xkey.subwindow);
+    save_window_state(dpy, wm::fwindow);
 
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XMoveResizeWindow(dpy, wm::fwindow,
         PADDING,
         PADDING,
         wm::display_width - (PADDING * 2),
@@ -178,7 +178,7 @@ int builtins::fill_revert(Display* dpy, XEvent* event){
 
     wm::windows[i]._fill = false;
 
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XMoveResizeWindow(dpy, wm::fwindow,
         wm::windows[i]._saved_x,
         wm::windows[i]._saved_y,
         wm::windows[i]._saved_width,
@@ -199,7 +199,7 @@ int builtins::exit_program(Display* dpy, XEvent* event){
         }
     }
 
-    XDestroyWindow(dpy, wm::fwindow);
+    XKillClient(dpy, wm::fwindow);
 
     if (wm::windows.size() == 0)
         wm::fwindow = wm::root;
