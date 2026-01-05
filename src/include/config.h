@@ -23,6 +23,11 @@ namespace config {
     extern int _global_border_focus_color;
     extern int _global_border_unfocus_color;
 
+    extern int _global_infocus_border_width;
+    extern int _global_unfocus_border_width;
+    extern int _global_infocus_border_color;
+    extern int _global_unfocus_border_color;
+
     extern int _global_extend_amount;
 
     extern std::vector <_key_bind_t> _key_bind_table;

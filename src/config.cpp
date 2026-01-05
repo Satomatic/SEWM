@@ -11,6 +11,11 @@ int config::_global_border_focus_color = 0xffffffff;
 int config::_global_border_unfocus_color = 0;
 int config::_global_extend_amount = 10;
 
+int config::_global_infocus_border_width = 0;
+int config::_global_unfocus_border_width = 0;
+int config::_global_infocus_border_color = 0;
+int config::_global_unfocus_border_color = 0;
+
 std::map <std::string, unsigned int> _key_mod_bind = {
     { "alt",     Mod1Mask },
     { "meta",    Mod4Mask },
@@ -61,6 +66,27 @@ int config::init(char* filepath){
          */
         if (line_split[0] == "extend-amount"){
             config::_global_extend_amount = atoi(strip(line_split[1]).c_str());
+        
+        } else if (line_split[0] == "infocus-border-width") {
+            config::_global_infocus_border_width = atoi(strip(line_split[1]).c_str());
+
+        } else if (line_split[0] == "unfocus-border-width") {
+            config::_global_unfocus_border_width = atoi(strip(line_split[1]).c_str());
+        
+        } else if (line_split[0] == "infocus-border-color") {
+            config::_global_infocus_border_color = 0xff000000 + std::stoul(
+                strip(line_split[1]).c_str(), 
+                nullptr, 
+                16
+            );
+
+        } else if (line_split[0] == "unfocus-border-color"){
+            config::_global_unfocus_border_color = 0xff000000 + std::stoul(
+                strip(line_split[1]).c_str(),
+                nullptr,
+                16
+            );
+
         }
 
         /**

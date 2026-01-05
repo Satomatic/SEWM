@@ -2,8 +2,11 @@
 startup: feh --bg-scale ./background.png
 
 [ Theme preferences ]
-infocus-border: 2 #ffffffff
-unfocus-border: 1 #00000000
+infocus-border-color: 0xffffff
+unfocus-border-color: 0x000000
+
+infocus-border-width: 1
+unfocus-border-width: 1
 
 [ Default Apps ]
 key-bind-exec: META+t = /usr/bin/xterm

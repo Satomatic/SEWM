@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include <keyboard.h>
+#include <config.h>
 #include <mouse.h>
 #include <global.h>
 #include <error.h>
@@ -35,15 +36,14 @@ std::vector <wm_window_t> wm::windows = {};
  *  @param Window Window to focus
  */
 void wm::update_focus_border(Window win){
-    XSetWindowAttributes attr;
-    attr.border_pixel = 0x00000000;
-    XChangeWindowAttributes(wm::dpy, wm::fwindow, CWBorderPixel, &attr);
+    XSetWindowBorder(wm::dpy, wm::fwindow, config::_global_unfocus_border_color);
+    XSetWindowBorderWidth(wm::dpy, wm::fwindow, config::_global_unfocus_border_width);
  
     wm::fwindow = win;
     XSetInputFocus(wm::dpy, wm::fwindow, RevertToParent, CurrentTime);
-
-    attr.border_pixel = 0xffffffff;
-    XChangeWindowAttributes(wm::dpy, wm::fwindow, CWBorderPixel, &attr);
+    
+    XSetWindowBorder(wm::dpy, wm::fwindow, config::_global_infocus_border_color);
+    XSetWindowBorderWidth(wm::dpy, wm::fwindow, config::_global_infocus_border_width);
 }
 
 int main(int argc, char** argv)
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 
             case CreateNotify:
                 wm::update_focus_border(ev.xcreatewindow.window);
-                
+
                 XGetWindowAttributes(
                     wm::dpy,
                     ev.xcreatewindow.window,
