@@ -170,7 +170,7 @@ int builtins::fill_fullscreen(Display* dpy, XEvent* event){
 
 int builtins::fill_revert(Display* dpy, XEvent* event){
     int i = 0;
-    for (; i < wm::windows.size() && wm::windows[i]._window != event->xkey.subwindow; i++)
+    for (; i < wm::windows.size() && wm::windows[i]._window != wm::fwindow; i++)
         continue;
 
     if (!wm::windows[i]._fill)
@@ -199,8 +199,9 @@ int builtins::exit_program(Display* dpy, XEvent* event){
         }
     }
 
-    XKillClient(dpy, wm::fwindow);
-
+//    XKillClient(dpy, wm::fwindow);
+    XDestroyWindow(dpy, wm::fwindow);
+    
     if (wm::windows.size() == 0)
         wm::fwindow = wm::root;
     else

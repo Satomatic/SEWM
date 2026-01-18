@@ -1,5 +1,6 @@
 #include <args.h>
 #include <config.h>
+#include <global.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -68,7 +69,8 @@ void wm::process_args(int argc, char** argv){
          *  Print version string
          */
         if (check_alias("version", argv[i]) == 0){
-            printf("SEWM :: 0.0.1 :: build 42925\n");
+            printf("\033[1m%s\033[0m\nVersion %s\n",
+                WM_NAME, WM_VERS);
             exit(1);
 
         /**
