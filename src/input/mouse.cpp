@@ -35,8 +35,10 @@ int mouse::handle_press(Display* dpy, XEvent* event) {
     XAllowEvents(wm::dpy, ReplayPointer, event->xbutton.time);
     XSync(wm::dpy, 0);
     
-    if (event->xbutton.subwindow == None)
+    if (event->xbutton.subwindow == None){
+        wm::update_focus_border(None);
         return -1;
+    }
 
     XGetWindowAttributes(dpy, event->xbutton.subwindow, &wm::attr);
     wm::start = event->xbutton;
@@ -109,9 +111,7 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
      */
     } else if (rel_x >= wm::attr.width - config::_global_corner_drag_amount && rel_x <= wm::attr.width &&
                rel_y >= wm::attr.height - config::_global_corner_drag_amount && rel_y <= wm::attr.height){
-        XMoveResizeWindow(dpy, wm::fwindow,
-            wm::attr.x,
-            wm::attr.y,
+        XResizeWindow(dpy, wm::fwindow,
             MAX(1, wm::attr.width + xdiff),
             MAX(1, wm::attr.height + ydiff)
         );
@@ -134,12 +134,10 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
 
     }
     
-    XMoveResizeWindow(dpy, wm::fwindow,
-                      wm::attr.x + (wm::start.button==1 ? xdiff : 0),
-                      wm::attr.y + (wm::start.button==1 ? ydiff : 0),
-                      MAX(1, wm::attr.width + (wm::start.button==3 ? xdiff : 0)),
-                      MAX(1, wm::attr.height + (wm::start.button==3 ? ydiff : 0)));
-    
+    /**
+     *  If we aren't dragging a corner then we can just move the window
+     */
+    XMoveWindow(dpy, wm::fwindow, wm::attr.x + xdiff, wm::attr.y + ydiff);
     return 0;
 }
 

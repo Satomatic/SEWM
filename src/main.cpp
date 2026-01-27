@@ -40,7 +40,9 @@ void wm::update_focus_border(Window win){
     XSetWindowBorderWidth(wm::dpy, wm::fwindow, config::_global_unfocus_border_width);
  
     wm::fwindow = win;
-    XSetInputFocus(wm::dpy, wm::fwindow, RevertToParent, CurrentTime);
+ 
+    if (wm::fwindow)
+        XSetInputFocus(wm::dpy, wm::fwindow, RevertToParent, CurrentTime);
     
     XSetWindowBorder(wm::dpy, wm::fwindow, config::_global_infocus_border_color);
     XSetWindowBorderWidth(wm::dpy, wm::fwindow, config::_global_infocus_border_width);
