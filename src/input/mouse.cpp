@@ -64,18 +64,81 @@ int mouse::handle_press(Display* dpy, XEvent* event) {
 int mouse::handle_motion(Display* dpy, XEvent* event) {
     //if (event->xbutton.subwindow == None)
     //    return -1;
-    
+
     if ((event->xbutton.state & Mod4Mask) == 0)
         return -1;
+    
+    int rel_x = wm::start.x - wm::attr.x;
+    int rel_y = wm::start.y - wm::attr.y;
 
     int xdiff = event->xbutton.x_root - wm::start.x_root;
     int ydiff = event->xbutton.y_root - wm::start.y_root;
+    
+    /**
+     *  Top left corner pinch
+     */
+    if (rel_x >= 0 && rel_x <= 20 &&
+        rel_y >= 0 && rel_y <= 20
+    ){
+        XMoveResizeWindow(dpy, wm::fwindow,
+            wm::attr.x + xdiff,
+            wm::attr.y + ydiff,
+            MAX(1, wm::attr.width - xdiff),
+            MAX(1, wm::attr.height - ydiff)
+        );
+
+        return 0;
+    
+    /**
+     *  Bottom left corner pinch
+     */
+    } else if (rel_x >= 0 && rel_x <= 20 &&
+               rel_y >= wm::attr.height - 20 && rel_y <= wm::attr.height){
+        XMoveResizeWindow(dpy, wm::fwindow,
+            wm::attr.x + xdiff,
+            wm::attr.y,
+            MAX(1, wm::attr.width - xdiff),
+            MAX(1, wm::attr.height + ydiff)
+        );
+
+        return 0;
+
+    /**
+     *  Bottom right corner pinch
+     */
+    } else if (rel_x >= wm::attr.width - 20 && rel_x <= wm::attr.width &&
+               rel_y >= wm::attr.height - 20 && rel_y <= wm::attr.height){
+        XMoveResizeWindow(dpy, wm::fwindow,
+            wm::attr.x,
+            wm::attr.y,
+            MAX(1, wm::attr.width + xdiff),
+            MAX(1, wm::attr.height + ydiff)
+        );
+
+        return 0;
+
+    /**
+     *  Top right corner pinch
+     */
+    } else if (rel_x >= wm::attr.width - 20 && rel_x <= wm::attr.width &&
+               rel_y >= 0 && rel_y <= 20){
+        XMoveResizeWindow(dpy, wm::fwindow,
+            wm::attr.x,
+            wm::attr.y + ydiff,
+            MAX(1, wm::attr.width + xdiff),
+            MAX(1, wm::attr.height - ydiff)
+        );
+
+        return 0;
+
+    }
+    
     XMoveResizeWindow(dpy, wm::fwindow,
                       wm::attr.x + (wm::start.button==1 ? xdiff : 0),
                       wm::attr.y + (wm::start.button==1 ? ydiff : 0),
                       MAX(1, wm::attr.width + (wm::start.button==3 ? xdiff : 0)),
                       MAX(1, wm::attr.height + (wm::start.button==3 ? ydiff : 0)));
-
+    
     return 0;
 }
 
