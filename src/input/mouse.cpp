@@ -1,5 +1,6 @@
 #include "mouse.h"
 
+#include <config.h>
 #include <global.h>
 
 /**
@@ -77,8 +78,8 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
     /**
      *  Top left corner pinch
      */
-    if (rel_x >= 0 && rel_x <= 20 &&
-        rel_y >= 0 && rel_y <= 20
+    if (rel_x >= 0 && rel_x <= config::_global_corner_drag_amount &&
+        rel_y >= 0 && rel_y <= config::_global_corner_drag_amount
     ){
         XMoveResizeWindow(dpy, wm::fwindow,
             wm::attr.x + xdiff,
@@ -92,8 +93,8 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
     /**
      *  Bottom left corner pinch
      */
-    } else if (rel_x >= 0 && rel_x <= 20 &&
-               rel_y >= wm::attr.height - 20 && rel_y <= wm::attr.height){
+    } else if (rel_x >= 0 && rel_x <= config::_global_corner_drag_amount &&
+               rel_y >= wm::attr.height - config::_global_corner_drag_amount && rel_y <= wm::attr.height){
         XMoveResizeWindow(dpy, wm::fwindow,
             wm::attr.x + xdiff,
             wm::attr.y,
@@ -106,8 +107,8 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
     /**
      *  Bottom right corner pinch
      */
-    } else if (rel_x >= wm::attr.width - 20 && rel_x <= wm::attr.width &&
-               rel_y >= wm::attr.height - 20 && rel_y <= wm::attr.height){
+    } else if (rel_x >= wm::attr.width - config::_global_corner_drag_amount && rel_x <= wm::attr.width &&
+               rel_y >= wm::attr.height - config::_global_corner_drag_amount && rel_y <= wm::attr.height){
         XMoveResizeWindow(dpy, wm::fwindow,
             wm::attr.x,
             wm::attr.y,
@@ -120,8 +121,8 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
     /**
      *  Top right corner pinch
      */
-    } else if (rel_x >= wm::attr.width - 20 && rel_x <= wm::attr.width &&
-               rel_y >= 0 && rel_y <= 20){
+    } else if (rel_x >= wm::attr.width - config::_global_corner_drag_amount && rel_x <= wm::attr.width &&
+               rel_y >= 0 && rel_y <= config::_global_corner_drag_amount){
         XMoveResizeWindow(dpy, wm::fwindow,
             wm::attr.x,
             wm::attr.y + ydiff,

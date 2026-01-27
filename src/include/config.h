@@ -30,6 +30,8 @@ namespace config {
 
     extern int _global_extend_amount;
 
+    extern int _global_corner_drag_amount;
+
     extern std::vector <_key_bind_t> _key_bind_table;
 }
 

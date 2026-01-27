@@ -16,6 +16,8 @@ key-bind-exec: META+f = /usr/bin/dolphin
 [ Internal Functions ]
 extend-amount: 20
 
+corner-drag-radius: 20
+
 key-bind: META+x = exit-program
 key-bind: META+Right = extend-right
 key-bind: META+Left = extend-left

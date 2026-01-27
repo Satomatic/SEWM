@@ -10,6 +10,7 @@ int config::_global_border_width = 1;
 int config::_global_border_focus_color = 0xffffffff;
 int config::_global_border_unfocus_color = 0;
 int config::_global_extend_amount = 10;
+int config::_global_corner_drag_amount = 20;
 
 int config::_global_infocus_border_width = 0;
 int config::_global_unfocus_border_width = 0;
@@ -67,6 +68,9 @@ int config::init(char* filepath){
         if (line_split[0] == "extend-amount"){
             config::_global_extend_amount = atoi(strip(line_split[1]).c_str());
         
+        } else if (line_split[0] == "corner-drag-radius"){
+            config::_global_corner_drag_amount = atoi(strip(line_split[1]).c_str());
+
         } else if (line_split[0] == "infocus-border-width") {
             config::_global_infocus_border_width = atoi(strip(line_split[1]).c_str());
 
