@@ -83,9 +83,9 @@ int keyboard::handle(Display* dpy, XEvent* event) {
                 break;
         }
     }
-
+    
     if (event->xkey.subwindow != None)
-        XRaiseWindow(dpy, event->xkey.subwindow);
+        wm::update_focus_border(wm::fwindow);
 
     return 0;
 }

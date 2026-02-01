@@ -36,6 +36,10 @@ std::vector <wm_window_t> wm::windows = {};
  *  @param Window Window to focus
  */
 void wm::update_focus_border(Window win){
+    XWindowChanges win_config;
+    win_config.stack_mode = Above;
+    XConfigureWindow(dpy, win, CWStackMode, &win_config);
+
     XSetWindowBorder(wm::dpy, wm::fwindow, config::_global_unfocus_border_color);
     XSetWindowBorderWidth(wm::dpy, wm::fwindow, config::_global_unfocus_border_width);
  
