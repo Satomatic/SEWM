@@ -24,8 +24,8 @@ std::vector <core_function_t> builtins::functions = {
  *  Extend the current window to the right.
  */
 int builtins::extend_right(Display* dpy, XEvent* event){
-    XGetWindowAttributes(dpy, event->xkey.subwindow, &wm::attr);
-    XResizeWindow(dpy, event->xkey.subwindow,
+    XGetWindowAttributes(dpy, wm::fwindow, &wm::attr);
+    XResizeWindow(dpy, wm::fwindow,
         wm::attr.width + config::_global_extend_amount,
         wm::attr.height
     );
@@ -36,8 +36,8 @@ int builtins::extend_right(Display* dpy, XEvent* event){
  *  Extend the current window to the left
  */
 int builtins::extend_left(Display* dpy, XEvent* event){
-    XGetWindowAttributes(dpy, event->xkey.subwindow, &wm::attr);
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XGetWindowAttributes(dpy, wm::fwindow, &wm::attr);
+    XMoveResizeWindow(dpy, wm::fwindow,
         wm::attr.x - config::_global_extend_amount,
         wm::attr.y,
         wm::attr.width + config::_global_extend_amount,
@@ -49,8 +49,8 @@ int builtins::extend_left(Display* dpy, XEvent* event){
  *  Extend the current window up
  */
 int builtins::extend_up(Display* dpy, XEvent* event){
-    XGetWindowAttributes(dpy, event->xkey.subwindow, &wm::attr);
-    XMoveResizeWindow(dpy, event->xkey.subwindow,
+    XGetWindowAttributes(dpy, wm::fwindow, &wm::attr);
+    XMoveResizeWindow(dpy, wm::fwindow,
         wm::attr.x,
         wm::attr.y - config::_global_extend_amount,
         wm::attr.width,
@@ -62,8 +62,8 @@ int builtins::extend_up(Display* dpy, XEvent* event){
  *  Extend the current window down
  */
 int builtins::extend_down(Display* dpy, XEvent* event){
-    XGetWindowAttributes(dpy, event->xkey.subwindow, &wm::attr);
-    XResizeWindow(dpy, event->xkey.subwindow,
+    XGetWindowAttributes(dpy, wm::fwindow, &wm::attr);
+    XResizeWindow(dpy, wm::fwindow,
         wm::attr.width,
         wm::attr.height + config::_global_extend_amount);
     return 0;
