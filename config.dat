@@ -33,3 +33,6 @@ key-bind: META-ALT+Right = fill-right-half
 key-bind: META-ALT+Left = fill-left-half
 key-bind: META-ALT+Up = fill-fullscreen
 key-bind: META-ALT+Down = fill-revert
+
+key-bind: META+bracketleft = window-select-open
+key-bind: META+bracketright = window-select-close

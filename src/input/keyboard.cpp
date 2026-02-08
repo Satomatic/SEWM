@@ -21,6 +21,7 @@ int keyboard::init(Display* dpy) {
     /**
      *  Bind keys loaded from the configuration file.
      */
+
     #define XStringToKeycode(DPY, C) XKeysymToKeycode(DPY, XStringToKeysym(C))
     for (int i = 0; i < config::_key_bind_table.size(); i++){
         XGrabKey(dpy,
@@ -71,6 +72,9 @@ int keyboard::handle(Display* dpy, XEvent* event) {
 
             case _KEY_BIND_TYPE_FUNC:
                 for (int b = 0; b < builtins::functions.size(); b++){
+                    if (wm::window_select_mode && builtins::functions[b].identifier != "window-select-close")
+                        continue;
+
                     if (builtins::functions[b].identifier == config::_key_bind_table[i]._command){
                         builtins::functions[b].callback(dpy, event);
                         break;

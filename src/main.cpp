@@ -27,6 +27,8 @@ Window wm::fwindow;
 int wm::display_width = 0;
 int wm::display_height = 0;
 
+bool wm::window_select_mode = false;
+
 std::vector <wm_window_t> wm::windows = {};
 
 /**

@@ -7,7 +7,7 @@
 #include <string>
 
 #define WM_NAME "SEWM ( Sai's Experimental Window Manager )"
-#define WM_VERS "0.1.0"
+#define WM_VERS "0.1.6"
 
 typedef struct {
     Window _window;
@@ -33,6 +33,8 @@ namespace wm {
     void update_focus_border(Window);
 
     extern std::vector <wm_window_t> windows;
+
+    extern bool window_select_mode;
 }
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))

@@ -68,7 +68,7 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
     //if (event->xbutton.subwindow == None)
     //    return -1;
 
-    if ((event->xbutton.state & Mod4Mask) == 0)
+    if ((event->xbutton.state & Mod4Mask) == 0 || wm::window_select_mode)
         return -1;
     
     int rel_x = wm::start.x - wm::attr.x;

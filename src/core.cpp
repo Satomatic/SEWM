@@ -17,6 +17,9 @@ std::vector <core_function_t> builtins::functions = {
     { "fill-fullscreen", builtins::fill_fullscreen },
     { "fill-revert",     builtins::fill_revert     },
 
+    { "window-select-open",  builtins::window_select_open  },
+    { "window-select-close", builtins::window_select_close },
+    
     { "exit-program", builtins::exit_program },
 };
 

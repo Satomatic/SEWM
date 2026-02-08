@@ -30,6 +30,9 @@ namespace builtins {
     int fill_fullscreen(Display*, XEvent*);
     int fill_revert(Display*, XEvent*);
 
+    int window_select_open(Display*, XEvent*);
+    int window_select_close(Display*, XEvent*);
+    
     int exit_program(Display*, XEvent*);
 }
 
