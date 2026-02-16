@@ -1,6 +1,8 @@
 #include <core.h>
 #include <config.h>
 
+#include <cstring>
+
 std::vector <core_function_t> builtins::functions = {
     { "extend-right", builtins::extend_right },
     { "extend-left",  builtins::extend_left  },
@@ -201,10 +203,25 @@ int builtins::exit_program(Display* dpy, XEvent* event){
             break;
         }
     }
-
-//    XKillClient(dpy, wm::fwindow);
-    XDestroyWindow(dpy, wm::fwindow);
     
+    /**
+     *  Send WM_DELETE_PROTOCOL message to the current focused window.
+     */
+    XEvent ev;
+    memset(&ev, 0, sizeof(ev));
+
+    ev.xclient.type = ClientMessage;
+    ev.xclient.window = wm::fwindow;
+    ev.xclient.message_type = XInternAtom(dpy, "WM_PROTOCOLS", true);
+    ev.xclient.format = 32;
+    ev.xclient.data.l[0] = XInternAtom(dpy, "WM_DELETE_WINDOW", false);
+    ev.xclient.data.l[1] = CurrentTime;
+
+    XSendEvent(dpy, wm::fwindow, False, NoEventMask, &ev);
+
+    /**
+     *  Move focus to another window or just root if no other windows exist.
+     */
     if (wm::windows.size() == 0)
         wm::fwindow = wm::root;
     else
