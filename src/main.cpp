@@ -107,17 +107,17 @@ int main(int argc, char** argv)
                 mouse::handle_release(wm::dpy, &ev);
                 break;
 
-            case CreateNotify:
-                wm::update_focus_border(ev.xcreatewindow.window);
+            case MapNotify:
+                wm::update_focus_border(ev.xmap.window);
 
                 XGetWindowAttributes(
                     wm::dpy,
-                    ev.xcreatewindow.window,
+                    ev.xmap.window,
                     &wm::attr
                 );
 
                 wm::windows.push_back({
-                    ev.xcreatewindow.window,
+                    ev.xmap.window,
                     false,
                     wm::attr.width,
                     wm::attr.height,

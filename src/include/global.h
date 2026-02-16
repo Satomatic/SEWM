@@ -7,7 +7,7 @@
 #include <string>
 
 #define WM_NAME "SEWM ( Sai's Experimental Window Manager )"
-#define WM_VERS "0.1.6"
+#define WM_VERS "0.1.7"
 
 typedef struct {
     Window _window;
