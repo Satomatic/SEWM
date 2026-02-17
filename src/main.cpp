@@ -127,6 +127,14 @@ int main(int argc, char** argv)
 
                 break;
 
+            case UnmapNotify:
+                for (int i = 0; i < wm::windows.size(); i++){
+                    if (wm::windows[i]._window == ev.xunmap.window){
+                        wm::windows.erase(wm::windows.begin() + i); 
+                    }
+                }
+                break;
+
             default:
                 error::unhandled(&ev);
                 break;
