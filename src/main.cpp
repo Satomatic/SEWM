@@ -107,15 +107,17 @@ int main(int argc, char** argv)
                 mouse::handle_release(wm::dpy, &ev);
                 break;
 
-            case MapNotify:
-                wm::update_focus_border(ev.xmap.window);
+            case CreateNotify:
+                wm::update_focus_border(ev.xcreatewindow.window);
 
                 XGetWindowAttributes(
                     wm::dpy,
-                    ev.xmap.window,
+                    ev.xcreatewindow.window,
                     &wm::attr
                 );
+                break;
 
+            case MapNotify:
                 wm::windows.push_back({
                     ev.xmap.window,
                     false,
@@ -124,15 +126,12 @@ int main(int argc, char** argv)
                     wm::attr.x,
                     wm::attr.y
                 });
-
                 break;
 
             case UnmapNotify:
-                for (int i = 0; i < wm::windows.size(); i++){
-                    if (wm::windows[i]._window == ev.xunmap.window){
+                for (int i = 0; i < wm::windows.size(); i++)
+                    if (wm::windows[i]._window == ev.xunmap.window)
                         wm::windows.erase(wm::windows.begin() + i); 
-                    }
-                }
                 break;
 
             default:
