@@ -11,7 +11,7 @@
 int mouse::init(Display* dpy) {
     Window root = DefaultRootWindow(dpy);
 
-    XGrabButton(dpy, 1, Mod4Mask, root, True, ButtonPressMask | ButtonMotionMask, GrabModeAsync,
+    XGrabButton(dpy, 1, AnyModifier, root, True, ButtonPressMask | ButtonMotionMask, GrabModeAsync,
                 GrabModeAsync, None, None);
 
     XGrabButton(dpy, 3, Mod4Mask, root, True, ButtonPressMask | ButtonMotionMask, GrabModeAsync,
@@ -65,12 +65,17 @@ int mouse::handle_press(Display* dpy, XEvent* event) {
  *  @return (int) 0 == done :: -1 == unhandled
  */
 int mouse::handle_motion(Display* dpy, XEvent* event) {
-    //if (event->xbutton.subwindow == None)
-    //    return -1;
-
     if ((event->xbutton.state & Mod4Mask) == 0 || wm::window_select_mode)
         return -1;
-    
+
+    Window app_window;
+    for (int i = 0; i < wm::windows.size(); i++){
+        if (wm::windows[i]._frame_window == wm::fwindow){
+            app_window = wm::windows[i]._window;
+            break;
+        }
+    }
+
     int rel_x = wm::start.x - wm::attr.x;
     int rel_y = wm::start.y - wm::attr.y;
 
@@ -90,6 +95,13 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
             MAX(1, wm::attr.height - ydiff)
         );
 
+        XResizeWindow(
+            dpy,
+            app_window,
+            MAX(1, wm::attr.width - xdiff),
+            MAX(1, wm::attr.height - ydiff) - (wm::font->ascent + wm::font->descent)
+        );
+
         return 0;
     
     /**
@@ -104,6 +116,13 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
             MAX(1, wm::attr.height + ydiff)
         );
 
+        XResizeWindow(
+            dpy,
+            app_window,
+            MAX(1, wm::attr.width - xdiff),
+            MAX(1, wm::attr.height + ydiff) - (wm::font->ascent + wm::font->descent)
+        );
+
         return 0;
 
     /**
@@ -114,6 +133,13 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
         XResizeWindow(dpy, wm::fwindow,
             MAX(1, wm::attr.width + xdiff),
             MAX(1, wm::attr.height + ydiff)
+        );
+
+        XResizeWindow(
+            dpy,
+            app_window,
+            MAX(1, wm::attr.width + xdiff),
+            MAX(1, wm::attr.height + ydiff) - (wm::font->ascent + wm::font->descent)
         );
 
         return 0;
@@ -128,6 +154,13 @@ int mouse::handle_motion(Display* dpy, XEvent* event) {
             wm::attr.y + ydiff,
             MAX(1, wm::attr.width + xdiff),
             MAX(1, wm::attr.height - ydiff)
+        );
+
+        XResizeWindow(
+            dpy,
+            app_window,
+            MAX(1, wm::attr.width + xdiff),
+            MAX(1, wm::attr.height - ydiff) - (wm::font->ascent + wm::font->descent)
         );
 
         return 0;

@@ -120,7 +120,7 @@ void save_window_state(Display* dpy, Window window){
     XGetWindowAttributes(dpy, window, &wm::attr);
 
     int i = 0;
-    for (; i < wm::windows.size() && wm::windows[i]._window != window; i++)
+    for (; i < wm::windows.size() && wm::windows[i]._frame_window != window; i++)
         continue;
 
     if (!wm::windows[i]._fill){
@@ -130,6 +130,14 @@ void save_window_state(Display* dpy, Window window){
         wm::windows[i]._saved_height = wm::attr.height;
         wm::windows[i]._fill = true;
     }
+}
+
+Window get_sub_window(Window win){
+    for (int i = 0; i < wm::windows.size(); i++)
+        if (wm::windows[i]._frame_window == win)
+            return wm::windows[i]._window;
+
+    return NULL;
 }
 
 #define PADDING 10
@@ -142,6 +150,11 @@ int builtins::fill_right_half(Display* dpy, XEvent* event){
         PADDING,
         wm::display_width / 2 - (PADDING * 2),
         wm::display_height - (PADDING * 2)
+    );
+
+    XResizeWindow(dpy, get_sub_window(wm::fwindow),
+        wm::display_width / 2 - (PADDING * 2),
+        wm::display_height - (PADDING * 2) - (wm::font->ascent + wm::font->descent)
     );
 
     return 0;
@@ -157,6 +170,11 @@ int builtins::fill_left_half(Display* dpy, XEvent* event){
         wm::display_height - (PADDING * 2)
     );
 
+    XResizeWindow(dpy, get_sub_window(wm::fwindow),
+        wm::display_width / 2 - (PADDING * 2),
+        wm::display_height - (PADDING * 2) - (wm::font->ascent + wm::font->descent)
+    );
+
     return 0;
 }
 
@@ -170,12 +188,17 @@ int builtins::fill_fullscreen(Display* dpy, XEvent* event){
         wm::display_height - (PADDING * 2)
     );
 
+    XResizeWindow(dpy, get_sub_window(wm::fwindow),
+        wm::display_width - (PADDING * 2),
+        wm::display_height - (PADDING * 2) - (wm::font->ascent + wm::font->descent)
+    );
+
     return 0;
 }
 
 int builtins::fill_revert(Display* dpy, XEvent* event){
     int i = 0;
-    for (; i < wm::windows.size() && wm::windows[i]._window != wm::fwindow; i++)
+    for (; i < wm::windows.size() && wm::windows[i]._frame_window != wm::fwindow; i++)
         continue;
 
     if (!wm::windows[i]._fill)
@@ -190,6 +213,11 @@ int builtins::fill_revert(Display* dpy, XEvent* event){
         wm::windows[i]._saved_height
     );
 
+    XResizeWindow(dpy, get_sub_window(wm::fwindow),
+        wm::windows[i]._saved_width,
+        wm::windows[i]._saved_height - (wm::font->ascent + wm::font->descent)
+    );
+
     return 0;
 }
 
@@ -198,26 +226,28 @@ int builtins::fill_revert(Display* dpy, XEvent* event){
  */
 int builtins::exit_program(Display* dpy, XEvent* event){
     for (int i = 0; i < wm::windows.size(); i++){
-        if (wm::windows[i]._window == wm::fwindow){
+        if (wm::windows[i]._frame_window == wm::fwindow){
+            /**
+            *  Send WM_DELETE_PROTOCOL message to the current focused window.
+            */
+            XEvent ev;
+            memset(&ev, 0, sizeof(ev));
+
+            ev.xclient.type = ClientMessage;
+            ev.xclient.window = wm::windows[i]._window;
+            ev.xclient.message_type = XInternAtom(dpy, "WM_PROTOCOLS", true);
+            ev.xclient.format = 32;
+            ev.xclient.data.l[0] = XInternAtom(dpy, "WM_DELETE_WINDOW", false);
+            ev.xclient.data.l[1] = CurrentTime;
+
+            XSendEvent(dpy, wm::windows[i]._window, False, NoEventMask, &ev);
+
+            XDestroyWindow(dpy, wm::windows[i]._frame_window);
+
             wm::windows.erase(wm::windows.begin() + i);
             break;
         }
     }
-    
-    /**
-     *  Send WM_DELETE_PROTOCOL message to the current focused window.
-     */
-    XEvent ev;
-    memset(&ev, 0, sizeof(ev));
-
-    ev.xclient.type = ClientMessage;
-    ev.xclient.window = wm::fwindow;
-    ev.xclient.message_type = XInternAtom(dpy, "WM_PROTOCOLS", true);
-    ev.xclient.format = 32;
-    ev.xclient.data.l[0] = XInternAtom(dpy, "WM_DELETE_WINDOW", false);
-    ev.xclient.data.l[1] = CurrentTime;
-
-    XSendEvent(dpy, wm::fwindow, False, NoEventMask, &ev);
 
     /**
      *  Move focus to another window or just root if no other windows exist.
@@ -225,7 +255,7 @@ int builtins::exit_program(Display* dpy, XEvent* event){
     if (wm::windows.size() == 0)
         wm::fwindow = wm::root;
     else
-        wm::fwindow = wm::windows[wm::windows.size() - 1]._window;
+        wm::fwindow = wm::windows[wm::windows.size() - 1]._frame_window;
 
     wm::update_focus_border(wm::fwindow);
 

@@ -3,6 +3,7 @@
 #include <iostream>
 
 typedef struct {
+    Window _window_frame;
     Window _window;
 
     int _x;
@@ -37,8 +38,9 @@ int builtins::window_select_open(Display* dpy, XEvent* event){
          *  Store old window position and size data so it can be reverted
          *  by `window_select_close`.
          */
-        XGetWindowAttributes(dpy, wm::windows[i]._window, &attr);
+        XGetWindowAttributes(dpy, wm::windows[i]._frame_window, &attr);
         _window_store.push_back({
+            wm::windows[i]._frame_window,
             wm::windows[i]._window,
             attr.x,
             attr.y,
@@ -49,11 +51,16 @@ int builtins::window_select_open(Display* dpy, XEvent* event){
         /**
          *  Move and resize the windows.
          */
-        XMoveResizeWindow(dpy, wm::windows[i]._window,
+        XMoveResizeWindow(dpy, wm::windows[i]._frame_window,
             x_count,
             10,
             window_width,
             window_height - 20
+        );
+
+        XResizeWindow(dpy, wm::windows[i]._window,
+            window_width,
+            window_height - 20 - (wm::font->ascent + wm::font->descent)
         );
 
         x_count += window_width + 20;
@@ -65,11 +72,16 @@ int builtins::window_select_open(Display* dpy, XEvent* event){
 
 int builtins::window_select_close(Display* dpy, XEvent* event){
     for (int i = 0; i < _window_store.size(); i++){
-        XMoveResizeWindow(dpy, _window_store[i]._window,
+        XMoveResizeWindow(dpy, _window_store[i]._window_frame,
             _window_store[i]._x,
             _window_store[i]._y,
             _window_store[i]._w,
             _window_store[i]._h
+        );
+
+        XResizeWindow(dpy, _window_store[i]._window,
+            _window_store[i]._w,
+            _window_store[i]._h - (wm::font->ascent + wm::font->descent)
         );
     }
 

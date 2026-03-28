@@ -7,10 +7,15 @@
 #include <string>
 
 #define WM_NAME "SEWM ( Sai's Experimental Window Manager )"
-#define WM_VERS "0.1.7"
+#define WM_VERS "0.2.0"
 
 typedef struct {
     Window _window;
+    
+    Window _frame_window;
+    GC _frame_window_gc;
+
+    char* _window_name;
 
     bool _fill;
 
@@ -23,12 +28,15 @@ typedef struct {
 namespace wm {
     extern Display* dpy;
     extern Window root;
+    extern int screen;
     extern XWindowAttributes attr;
     extern XButtonEvent start;
     extern Window fwindow;
 
     extern int display_width;
     extern int display_height;
+
+    extern XFontStruct* font;
 
     void update_focus_border(Window);
 
