@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=sewm
+Comment=Sai's Experimental Window Manager
+Exec=sewm_exec
+Type=Application
+DesktopNames=sewm
